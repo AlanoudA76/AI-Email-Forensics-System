@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Email Here For Analysis</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+        <!-- Title Added Here, Centered at the top -->
+        <h1>AI Email Forensics</h1>
+
+    <div class="container">
+        <h1>Upload Your Email Here For Analysis</h1>
+        <!-- Form for file upload -->
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+            <div class="file-upload">
+                <input type="file" id="fileInput" name="file" />
+                <p>Drop Files or Click Here</p>
+            </div>
+            <button type="submit" class="start-button">Start!</button>
+        </form>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const uploadForm = document.getElementById("uploadForm");
+
+        // Trigger file input when the file upload box is clicked
+        document.querySelector(".file-upload").addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        // Log the selected file when it's chosen
+        fileInput.addEventListener("change", (event) => {
+            const fileName = event.target.files[0] ? event.target.files[0].name : "";
+            console.log("File Selected: ", fileName);
+        });
+        fileInput.addEventListener("change", (event) => {
+    const fileName = event.target.files[0] ? event.target.files[0].name : "";
+    document.querySelector(".file-upload p").innerText = fileName ? fileName : "Drop Files or Click Here";
+});
+
+        // Handle form submission for file upload
+        uploadForm.addEventListener("submit", (event) => {
+            event.preventDefault();  // Prevent the default form submission
+
+            if (fileInput.files.length === 0) {
+                alert("Please upload a file to start the analysis!");
+                return;
+            }
+
+            // Prepare form data
+            const formData = new FormData(uploadForm);
+
+            // Send the file to FastAPI backend for analysis
+            fetch("http://127.0.0.1:8000/analyze/", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Analysis Complete:", data);
+                // After the analysis is done, redirect to the result page
+                window.location.href = "/static/result.html"; // This should correctly redirect to the result.html page
+            })
+            .catch(error => {
+                console.error("Error during analysis:", error);
+            });
+        });
+
+        
+    </script>
+</body>
+</html>

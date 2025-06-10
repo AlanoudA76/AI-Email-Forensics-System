@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        <div id="analysisResults">
+            
+                <p>Generating a detailed report as a CSV file</p>
+            
+                <div class="checkbox-list">
+                    <input type="checkbox" checked disabled> Header Analysis
+                    <br>
+                    <input type="checkbox" checked disabled> Link Scanning
+                    <br>
+                    <input type="checkbox" checked disabled> Attachment Analysis
+                    <br>
+                    <input type="checkbox" checked disabled> Phishing Detection
+                </div>
+            
+            
+            <!-- Results will be injected here by JS -->
+        </div>
+        <button class="start-button" onclick="downloadReport()">Download Report</button>
+    </div>
+
+    <script>
+        function fetchAnalysisResults() {
+            fetch("http://127.0.0.1:8000/export/csv")
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById("analysisResults");
+                resultsContainer.innerHTML = `
+                    <p>Header Analysis: ${JSON.stringify(data["Header Analysis"])}</p>
+                    <p>Extracted URLs: ${JSON.stringify(data["Extracted URLs"])}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching results:", error);
+            });
+        }
+
+        function downloadReport() {
+            window.location.href = "http://127.0.0.1:8000/export/csv";
+        }
+
+        // Fetch the analysis results on page load
+        window.onload = fetchAnalysisResults;
+    </script>
+</body>
+</html>

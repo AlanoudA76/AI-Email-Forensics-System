@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+scikit-learn
+joblib
+python-dotenv
+python-multipart
+python-magic
+requests
+gunicorn
